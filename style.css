@@ -137,7 +137,7 @@ html {
 
 /* Definir colores específicos para algunos números */
 .num-00 { background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); }
-.num-01 { background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); }
+.num-01 { background-color: rgb(255, 0, 0); color: rgb(0, 0, 0); }
 .num-02 { background-color: rgb(255, 0, 0); color: rgb(0, 0, 0); }
 .num-03 { background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); }
 .num-04 { background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); }
@@ -148,7 +148,7 @@ html {
 .num-09 { background-color: rgb(255, 0, 0); color: rgb(0, 0, 0); }
 
 .num-10 { background-color: rgb(255, 0, 0); color: rgb(0, 0, 0); }
-.num-11 { background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); }
+.num-11 { background-color: rgb(255, 0, 0); color: rgb(0, 0, 0); }
 .num-12 { background-color: rgb(255, 0, 0); color: rgb(0, 0, 0); }
 .num-13 { background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); }
 .num-14 { background-color: rgb(255, 0, 0); color: rgb(0, 0, 0); }

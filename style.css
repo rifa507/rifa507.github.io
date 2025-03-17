@@ -136,7 +136,7 @@ html {
 }
 
 /* Definir colores específicos para algunos números */
-.num-00 { background-color: rgb(255, 0, 0); color: rgb(0, 0, 0); }
+.num-00 { background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); }
 .num-01 { background-color: rgb(255, 0, 0); color: rgb(0, 0, 0); }
 .num-02 { background-color: rgb(255, 0, 0); color: rgb(0, 0, 0); }
 .num-03 { background-color: rgb(255, 0, 0); color: rgb(0, 0, 0); }

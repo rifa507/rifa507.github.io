@@ -1,42 +1,265 @@
-/* Obtención del contenedor donde se mostrarán los números */
-const container = document.getElementById('numbersContainer');
+/* ============================================= */
+/* CONTENEDOR DE LOS NÚMEROS */
+/* ============================================= */
 
-document.addEventListener("DOMContentLoaded", function () {
-    const carteraImg = document.querySelector(".cartera-img");
-    const popup = document.getElementById("popup");
-    const popupImg = document.getElementById("popup-img");
-    const close = document.querySelector(".close");
+const container =
+    document.getElementById("numbersContainer");
 
-    // Asegura que el popup está oculto al cargar la página
-    popup.style.display = "none";
 
-    // Muestra el popup al hacer clic en la imagen
-    carteraImg.addEventListener("click", function () {
-        popup.style.display = "flex";
-        popupImg.src = this.src;
-    });
+/* ============================================= */
+/* ESTADOS */
+/* ============================================= */
 
-    // Cierra el popup al hacer clic en la 'X'
-    close.addEventListener("click", function () {
-        popup.style.display = "none";
-    });
+const estados = [
 
-    // Cierra el popup al hacer clic fuera de la imagen
-    popup.addEventListener("click", function (e) {
-        if (e.target === popup) {
-            popup.style.display = "none";
-        }
-    });
-});
+    "disponible",
 
-/* Bucle para crear 100 números (del 00 al 99) */
+    "apartado",
+
+    "pagado"
+
+];
+
+
+/* ============================================= */
+/* CARGAR DATOS GUARDADOS */
+/* ============================================= */
+
+let numerosGuardados =
+    JSON.parse(
+        localStorage.getItem("rifaEstados")
+    ) || {};
+
+
+/* ============================================= */
+/* CREAR NÚMEROS DEL 00 AL 99 */
+/* ============================================= */
+
 for (let i = 0; i < 100; i++) {
-    let num = i.toString().padStart(2, '0'); /* Formateo del número con dos dígitos */
-    let div = document.createElement('div'); /* Creamos un div para cada número */
-    div.classList.add('number', `num-${num}`); /* Asignamos la clase 'number' y la clase específica para el número */
-    div.textContent = num; /* Establecemos el texto dentro del div */
-    
-    /* Añadimos el div con el número al contenedor */
-    container.appendChild(div);
+
+    /* Convertimos por ejemplo:
+
+       0  = 00
+       1  = 01
+       9  = 09
+       10 = 10
+
+    */
+
+    const numero =
+        i.toString().padStart(2, "0");
+
+
+    /* Crear botón */
+
+    const celda =
+        document.createElement("button");
+
+
+    celda.classList.add("numero");
+
+
+    /* Guardamos el número */
+
+    celda.dataset.numero = numero;
+
+
+    /* ========================================= */
+    /* BUSCAR ESTADO GUARDADO */
+    /* ========================================= */
+
+    const estadoActual =
+        numerosGuardados[numero]
+        || "disponible";
+
+
+    aplicarEstado(
+        celda,
+        estadoActual
+    );
+
+
+    /* ========================================= */
+    /* CLICK */
+/* ========================================= */
+
+    celda.addEventListener(
+        "click",
+        function () {
+
+            cambiarEstado(
+                celda,
+                numero
+            );
+
+        }
+    );
+
+
+    /* Agregar al tablero */
+
+    container.appendChild(celda);
+
 }
 
+
+
+/* ============================================= */
+/* CAMBIAR ESTADO */
+/* ============================================= */
+
+function cambiarEstado(celda, numero) {
+
+
+    /* Estado actual */
+
+    let estadoActual =
+        celda.dataset.estado;
+
+
+    /* Buscar posición */
+
+    let posicion =
+        estados.indexOf(estadoActual);
+
+
+    /* Siguiente estado */
+
+    posicion++;
+
+
+    /* Si llega al final vuelve al principio */
+
+    if (posicion >= estados.length) {
+
+        posicion = 0;
+
+    }
+
+
+    const nuevoEstado =
+        estados[posicion];
+
+
+    /* Aplicar visualmente */
+
+    aplicarEstado(
+        celda,
+        nuevoEstado
+    );
+
+
+    /* Guardar */
+
+    numerosGuardados[numero] =
+        nuevoEstado;
+
+
+    guardarDatos();
+
+}
+
+
+
+/* ============================================= */
+/* APLICAR ESTADO AL NÚMERO */
+/* ============================================= */
+
+function aplicarEstado(celda, estado) {
+
+
+    /* Quitar estados anteriores */
+
+    celda.classList.remove(
+        "estado-disponible",
+        "estado-apartado",
+        "estado-pagado"
+    );
+
+
+    /* Agregar estado nuevo */
+
+    celda.classList.add(
+        "estado-" + estado
+    );
+
+
+    /* Guardarlo en el elemento */
+
+    celda.dataset.estado = estado;
+
+}
+
+
+
+/* ============================================= */
+/* GUARDAR EN EL NAVEGADOR */
+/* ============================================= */
+
+function guardarDatos() {
+
+    localStorage.setItem(
+
+        "rifaEstados",
+
+        JSON.stringify(
+            numerosGuardados
+        )
+
+    );
+
+}
+
+
+
+/* ============================================= */
+/* REINICIAR TODOS LOS NÚMEROS */
+/* ============================================= */
+
+document
+    .getElementById("reiniciar")
+    .addEventListener(
+        "click",
+        function () {
+
+
+            const confirmar =
+                confirm(
+                    "¿Seguro que deseas poner todos los números disponibles?"
+                );
+
+
+            if (!confirmar) {
+
+                return;
+
+            }
+
+
+            /* Borrar memoria */
+
+            localStorage.removeItem(
+                "rifaEstados"
+            );
+
+
+            numerosGuardados = {};
+
+
+            /* Cambiar todos visualmente */
+
+            document
+                .querySelectorAll(".numero")
+                .forEach(
+                    function (celda) {
+
+                        aplicarEstado(
+                            celda,
+                            "disponible"
+                        );
+
+                    }
+                );
+
+        }
+    );

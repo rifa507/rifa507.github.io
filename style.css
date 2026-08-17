@@ -1,11 +1,15 @@
+/* ============================================ */
+/* CONFIGURACIÓN GENERAL */
+/* ============================================ */
+
 * {
     box-sizing: border-box;
 }
 
-
-/* ============================= */
-/* CUERPO */
-/* ============================= */
+html {
+    margin: 0;
+    padding: 0;
+}
 
 body {
 
@@ -21,9 +25,9 @@ body {
 }
 
 
-/* ============================= */
+/* ============================================ */
 /* PÁGINA */
-/* ============================= */
+/* ============================================ */
 
 .pagina {
 
@@ -37,9 +41,9 @@ body {
 }
 
 
-/* ============================= */
+/* ============================================ */
 /* CONTENEDOR DE LA RIFA */
-/* ============================= */
+/* ============================================ */
 
 .rifa-container {
 
@@ -53,9 +57,9 @@ body {
 }
 
 
-/* ============================= */
+/* ============================================ */
 /* IMAGEN ORIGINAL */
-/* ============================= */
+/* ============================================ */
 
 .rifa-imagen {
 
@@ -71,46 +75,27 @@ body {
 }
 
 
-/* ================================================= */
-/* CUADRÍCULA ENCIMA DE LOS NÚMEROS 00 - 99 */
-/* ================================================= */
-
-/*
-
-La imagen original mide aproximadamente:
-
-1024 x 1445
-
-La cuadrícula de números está ubicada
-sobre el lado derecho de la imagen.
-
-NO TOCAR estos valores a menos
-que cambies la imagen.
-
-*/
+/* ============================================ */
+/* CUADRÍCULA 00 - 99 */
+/* ============================================ */
 
 .numeros-grid {
 
     position: absolute;
 
     /*
-    Posición horizontal
+       Estos valores colocan la cuadrícula
+       encima de la tabla de números
+       de la imagen original.
     */
+
     left: 46.15%;
 
-    /*
-    Posición vertical
-    */
     top: 24.45%;
 
-    /*
-    Tamaño completo del cuadro
-    de números
-    */
     width: 52.10%;
 
     height: 57.05%;
-
 
     display: grid;
 
@@ -121,96 +106,82 @@ que cambies la imagen.
 }
 
 
-/* ============================= */
-/* CADA NÚMERO */
-/* ============================= */
+/* ============================================ */
+/* CADA CASILLA */
+/* ============================================ */
 
 .numero {
+    width: calc(100% + 2px);
+    height: calc(100% + 2px);
 
-    position: relative;
-
-    width: 100%;
-
-    height: 100%;
-
-    border: none;
-
-    padding: 0;
-
-    margin: 0;
-
-    cursor: pointer;
+    margin-left: 1px;
+    margin-top: -1px;
 
     background-color: transparent;
 
-    transition:
-        background-color 0.20s ease,
-        box-shadow 0.20s ease;
+    pointer-events: none;
+}
+
+
+/* ============================================ */
+/* DISPONIBLES */
+/* ============================================ */
+
+/*
+   Los números disponibles NO necesitan
+   aparecer aquí.
+
+   Si un número no está en la lista
+   de OCUPADOS, automáticamente se verá
+   como disponible.
+*/
+
+
+/* ============================================ */
+/* OCUPADOS - MORADO */
+/* ============================================ */
+
+/*
+   AQUÍ ES DONDE TÚ CONTROLAS LA RIFA.
+
+   Para ocupar un número, solamente
+   agrégalo a esta lista.
+
+   Ejemplo:
+
+   .num-13,
+   .num-25,
+   .num-32
+
+*/
+
+
+.num-13,
+.num-12,
+.num-25,
+.num-32,
+.num-01
+{
+
+    background-color: rgba(
+        190,
+        55,
+        255,
+        0.58
+    );
 
 }
 
 
-/* ============================= */
-/* HOVER */
-/* ============================= */
-
-.numero:hover {
-
-    background-color: rgba(188, 74, 255, 0.15);
-
-    box-shadow:
-        inset 0 0 8px rgba(195, 73, 255, 0.8);
-
-}
-
-
-/* ================================================= */
-/* ESTADOS */
-/* ================================================= */
-
-
-/* DISPONIBLE */
-
-.numero.estado-disponible {
-
-    background-color: transparent;
-
-}
-
-
-/* APARTADO */
-
-.numero.estado-apartado {
-
-    background-color: rgba(190, 55, 255, 0.50);
-
-    box-shadow:
-        inset 0 0 7px rgba(111, 0, 150, 0.9);
-
-}
-
-
-/* PAGADO */
-
-.numero.estado-pagado {
-
-    background-color: rgba(37, 199, 100, 0.58);
-
-    box-shadow:
-        inset 0 0 7px rgba(0, 100, 40, 0.9);
-
-}
-
-
-/* ============================= */
-/* PANEL */
-/* ============================= */
+/* ============================================ */
+/* LEYENDA */
+/* ============================================ */
 
 .panel {
 
     margin-top: 20px;
 
-    padding: 12px 20px;
+    padding: 12px 22px;
 
     display: flex;
 
@@ -220,15 +191,15 @@ que cambies la imagen.
 
     flex-wrap: wrap;
 
-    gap: 20px;
-
-    border: 1px solid #b93cff;
-
-    border-radius: 12px;
+    gap: 25px;
 
     background-color: #111;
 
     color: white;
+
+    border: 1px solid #b93cff;
+
+    border-radius: 12px;
 
     box-shadow:
         0 0 15px rgba(180, 45, 255, 0.25);
@@ -236,9 +207,9 @@ que cambies la imagen.
 }
 
 
-/* ============================= */
-/* ESTADOS DEL PANEL */
-/* ============================= */
+/* ============================================ */
+/* CADA ESTADO */
+/* ============================================ */
 
 .estado {
 
@@ -246,16 +217,18 @@ que cambies la imagen.
 
     align-items: center;
 
-    gap: 7px;
-
-    font-weight: bold;
+    gap: 8px;
 
     font-size: 14px;
+
+    font-weight: bold;
 
 }
 
 
-/* CUADRITOS */
+/* ============================================ */
+/* CUADRITOS DE LA LEYENDA */
+/* ============================================ */
 
 .cuadro {
 
@@ -270,7 +243,7 @@ que cambies la imagen.
 }
 
 
-/* Disponible */
+/* DISPONIBLE */
 
 .cuadro.disponible {
 
@@ -281,74 +254,22 @@ que cambies la imagen.
 }
 
 
-/* Apartado */
+/* OCUPADO */
 
-.cuadro.apartado {
+.cuadro.ocupado {
 
-    background-color: #b93cff;
-
-}
-
-
-/* Pagado */
-
-.cuadro.pagado {
-
-    background-color: #25c764;
+    background-color: rgb(
+        190,
+        55,
+        255
+    );
 
 }
 
 
-/* ============================= */
-/* ACCIONES */
-/* ============================= */
-
-.acciones {
-
-    margin-top: 15px;
-
-    margin-bottom: 30px;
-
-}
-
-
-/* ============================= */
-/* BOTÓN REINICIAR */
-/* ============================= */
-
-#reiniciar {
-
-    border: 1px solid #bc3cff;
-
-    border-radius: 8px;
-
-    padding: 10px 18px;
-
-    font-size: 14px;
-
-    font-weight: bold;
-
-    cursor: pointer;
-
-    color: white;
-
-    background-color: #111;
-
-    transition: 0.2s;
-
-}
-
-
-#reiniciar:hover {
-
-    background-color: #bc3cff;
-
-}
-
-
-/* ============================= */
+/* ============================================ */
 /* CELULAR */
-/* ============================= */
+/* ============================================ */
 
 @media (max-width: 600px) {
 
@@ -361,11 +282,13 @@ que cambies la imagen.
 
     .panel {
 
-        margin-top: 12px;
-
         width: 95%;
 
-        gap: 12px;
+        margin-top: 12px;
+
+        margin-bottom: 15px;
+
+        gap: 20px;
 
     }
 

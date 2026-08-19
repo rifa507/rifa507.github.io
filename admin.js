@@ -55,116 +55,128 @@ const firebaseConfig = {
 
 
 /* ============================================ */
-/* INICIALIZAR FIREBASE */
+/* INICIALIZAR */
 /* ============================================ */
 
 const app =
     initializeApp(firebaseConfig);
 
-
 const database =
     getDatabase(app);
-
 
 const auth =
     getAuth(app);
 
 
 /* ============================================ */
-/* ELEMENTOS HTML */
+/* ELEMENTOS */
 /* ============================================ */
 
 const loginBox =
     document.getElementById("loginBox");
 
-
 const panelAdmin =
     document.getElementById("panelAdmin");
-
 
 const correoInput =
     document.getElementById("correo");
 
-
 const passwordInput =
     document.getElementById("password");
-
 
 const loginBtn =
     document.getElementById("loginBtn");
 
-
 const mensaje =
     document.getElementById("mensaje");
 
-
 const cerrarSesion =
     document.getElementById("cerrarSesion");
-
 
 const numerosAdmin =
     document.getElementById("numerosAdmin");
 
 
-/* ============================================ */
-/* ELEMENTOS MODAL */
-/* ============================================ */
+/* MODAL */
 
 const modalFondo =
     document.getElementById("modalFondo");
 
-
-const pasoConfirmacion =
-    document.getElementById("pasoConfirmacion");
-
+const pasoDisponible =
+    document.getElementById("pasoDisponible");
 
 const pasoNombre =
     document.getElementById("pasoNombre");
 
+const pasoOcupado =
+    document.getElementById("pasoOcupado");
 
-const textoModal =
-    document.getElementById("textoModal");
+const pasoPagado =
+    document.getElementById("pasoPagado");
 
-
-const confirmarSi =
-    document.getElementById("confirmarSi");
-
-
-const cancelarOperacion =
-    document.getElementById("cancelarOperacion");
-
+const textoDisponible =
+    document.getElementById("textoDisponible");
 
 const numeroNombre =
     document.getElementById("numeroNombre");
 
-
 const nombreCliente =
     document.getElementById("nombreCliente");
-
-
-const guardarNombre =
-    document.getElementById("guardarNombre");
-
-
-const cancelarNombre =
-    document.getElementById("cancelarNombre");
-
 
 const errorNombre =
     document.getElementById("errorNombre");
 
+const textoOcupado =
+    document.getElementById("textoOcupado");
+
+const textoPagado =
+    document.getElementById("textoPagado");
+
+
+/* BOTONES */
+
+const ocuparSi =
+    document.getElementById("ocuparSi");
+
+const cancelarDisponible =
+    document.getElementById("cancelarDisponible");
+
+const guardarNombre =
+    document.getElementById("guardarNombre");
+
+const cancelarNombre =
+    document.getElementById("cancelarNombre");
+
+const marcarPagado =
+    document.getElementById("marcarPagado");
+
+const desocuparOcupado =
+    document.getElementById("desocuparOcupado");
+
+const cancelarOcupado =
+    document.getElementById("cancelarOcupado");
+
+const volverOcupado =
+    document.getElementById("volverOcupado");
+
+const desocuparPagado =
+    document.getElementById("desocuparPagado");
+
+const cancelarPagado =
+    document.getElementById("cancelarPagado");
+
 
 /* ============================================ */
-/* VARIABLES TEMPORALES */
+/* VARIABLES */
 /* ============================================ */
 
 let numeroSeleccionado = null;
 
-let numeroEstaOcupado = false;
+let datosActuales = {};
 
 
 /* ============================================ */
-/* CREAR NÚMEROS 00 - 99 */
+/* CREAR 00 - 99 */
 /* ============================================ */
 
 for (let i = 0; i < 100; i++) {
@@ -173,44 +185,44 @@ for (let i = 0; i < 100; i++) {
         i.toString().padStart(2, "0");
 
 
-    /* CONTENEDOR */
-
     const item =
         document.createElement("div");
-
 
     item.classList.add(
         "numero-item"
     );
 
 
-    /* BOTÓN */
-
     const boton =
         document.createElement("button");
-
 
     boton.classList.add(
         "numero-admin"
     );
 
-
     boton.dataset.numero =
         numero;
 
 
-    /* NÚMERO */
-
     const numeroTexto =
         document.createElement("span");
-
 
     numeroTexto.classList.add(
         "numero-texto"
     );
 
-
     numeroTexto.textContent =
+        numero;
+
+
+    const nombre =
+        document.createElement("div");
+
+    nombre.classList.add(
+        "nombre-cliente"
+    );
+
+    nombre.dataset.nombreNumero =
         numero;
 
 
@@ -218,40 +230,18 @@ for (let i = 0; i < 100; i++) {
         numeroTexto
     );
 
-
-    /* NOMBRE */
-
-    const nombre =
-        document.createElement("div");
-
-
-    nombre.classList.add(
-        "nombre-cliente"
-    );
-
-
-    nombre.dataset.nombreNumero =
-        numero;
-
-
     boton.appendChild(
         nombre
     );
-
-
-    /* AGREGAR */
 
     item.appendChild(
         boton
     );
 
-
     numerosAdmin.appendChild(
         item
     );
 
-
-    /* CLICK */
 
     boton.addEventListener(
         "click",
@@ -260,14 +250,7 @@ for (let i = 0; i < 100; i++) {
             numeroSeleccionado =
                 this.dataset.numero;
 
-
-            numeroEstaOcupado =
-                this.classList.contains(
-                    "ocupado"
-                );
-
-
-            abrirConfirmacion();
+            abrirOpcionesNumero();
 
         }
     );
@@ -276,17 +259,16 @@ for (let i = 0; i < 100; i++) {
 
 
 /* ============================================ */
-/* ABRIR CONFIRMACIÓN */
+/* ABRIR SEGÚN ESTADO */
 /* ============================================ */
 
-function abrirConfirmacion() {
+function abrirOpcionesNumero() {
 
-    pasoConfirmacion.style.display =
-        "block";
+    ocultarPasos();
 
 
-    pasoNombre.style.display =
-        "none";
+    const estado =
+        datosActuales[numeroSeleccionado] || {};
 
 
     modalFondo.classList.add(
@@ -294,21 +276,16 @@ function abrirConfirmacion() {
     );
 
 
-    if (numeroEstaOcupado) {
+    /* DISPONIBLE */
 
-        textoModal.innerHTML =
+    if (
+        estado.ocupado !== true
+    ) {
 
-            `¿Deseas <strong>DESOCUPAR</strong>
-            el número
-            <span class="numero-modal">
-                ${numeroSeleccionado}
-            </span>?`;
+        pasoDisponible.style.display =
+            "block";
 
-    }
-
-    else {
-
-        textoModal.innerHTML =
+        textoDisponible.innerHTML =
 
             `¿Deseas <strong>OCUPAR</strong>
             el número
@@ -316,99 +293,119 @@ function abrirConfirmacion() {
                 ${numeroSeleccionado}
             </span>?`;
 
+        return;
+
     }
+
+
+    /* PAGADO */
+
+    if (
+        estado.pagado === true
+    ) {
+
+        pasoPagado.style.display =
+            "block";
+
+        textoPagado.innerHTML =
+
+            `Número
+            <span class="numero-modal">
+                ${numeroSeleccionado}
+            </span>
+            <br>
+            <span class="nombre-modal">
+                ${estado.nombre || ""}
+            </span>
+            <br><br>
+            Estado actual:
+            <strong>PAGADO</strong>`;
+
+        return;
+
+    }
+
+
+    /* OCUPADO */
+
+    pasoOcupado.style.display =
+        "block";
+
+    textoOcupado.innerHTML =
+
+        `Número
+        <span class="numero-modal">
+            ${numeroSeleccionado}
+        </span>
+        <br>
+        <span class="nombre-modal">
+            ${estado.nombre || ""}
+        </span>
+        <br><br>
+        Estado actual:
+        <strong>OCUPADO</strong>`;
 
 }
 
 
 /* ============================================ */
-/* BOTÓN SÍ */
+/* OCULTAR PASOS */
 /* ============================================ */
 
-confirmarSi.addEventListener(
+function ocultarPasos() {
+
+    pasoDisponible.style.display =
+        "none";
+
+    pasoNombre.style.display =
+        "none";
+
+    pasoOcupado.style.display =
+        "none";
+
+    pasoPagado.style.display =
+        "none";
+
+}
+
+
+/* ============================================ */
+/* DISPONIBLE -> PEDIR NOMBRE */
+/* ============================================ */
+
+ocuparSi.addEventListener(
     "click",
-    async function () {
+    function () {
 
-        /* SI ESTÁ OCUPADO -> DESOCUPAR */
+        ocultarPasos();
 
-        if (numeroEstaOcupado) {
+        pasoNombre.style.display =
+            "block";
 
-            const numeroRef =
-                ref(
-                    database,
-                    `numeros/${numeroSeleccionado}`
-                );
+        numeroNombre.textContent =
+            numeroSeleccionado;
 
+        nombreCliente.value =
+            "";
 
-            try {
+        errorNombre.textContent =
+            "";
 
-                await set(
-                    numeroRef,
-                    {
-                        ocupado: false,
-                        nombre: ""
-                    }
-                );
+        setTimeout(
+            function () {
 
+                nombreCliente.focus();
 
-                cerrarModal();
-
-            }
-
-            catch (error) {
-
-                console.error(error);
-
-
-                alert(
-                    "No se pudo desocupar el número."
-                );
-
-            }
-
-        }
-
-        /* SI ESTÁ DISPONIBLE -> PEDIR NOMBRE */
-
-        else {
-
-            pasoConfirmacion.style.display =
-                "none";
-
-
-            pasoNombre.style.display =
-                "block";
-
-
-            numeroNombre.textContent =
-                numeroSeleccionado;
-
-
-            nombreCliente.value =
-                "";
-
-
-            errorNombre.textContent =
-                "";
-
-
-            setTimeout(
-                function () {
-
-                    nombreCliente.focus();
-
-                },
-                100
-            );
-
-        }
+            },
+            100
+        );
 
     }
 );
 
 
 /* ============================================ */
-/* GUARDAR NOMBRE */
+/* GUARDAR OCUPADO */
 /* ============================================ */
 
 guardarNombre.addEventListener(
@@ -424,29 +421,24 @@ guardarNombre.addEventListener(
             errorNombre.textContent =
                 "Debes escribir un nombre.";
 
-
             return;
 
         }
 
 
-        const numeroRef =
-            ref(
-                database,
-                `numeros/${numeroSeleccionado}`
-            );
-
-
         try {
 
             await set(
-                numeroRef,
+                ref(
+                    database,
+                    `numeros/${numeroSeleccionado}`
+                ),
                 {
                     ocupado: true,
+                    pagado: false,
                     nombre: nombre
                 }
             );
-
 
             cerrarModal();
 
@@ -456,9 +448,8 @@ guardarNombre.addEventListener(
 
             console.error(error);
 
-
             errorNombre.textContent =
-                "No se pudo guardar el número.";
+                "No se pudo guardar.";
 
         }
 
@@ -467,7 +458,169 @@ guardarNombre.addEventListener(
 
 
 /* ============================================ */
-/* ENTER PARA GUARDAR */
+/* OCUPADO -> PAGADO */
+/* ============================================ */
+
+marcarPagado.addEventListener(
+    "click",
+    async function () {
+
+        const estado =
+            datosActuales[numeroSeleccionado] || {};
+
+
+        try {
+
+            await set(
+                ref(
+                    database,
+                    `numeros/${numeroSeleccionado}`
+                ),
+                {
+                    ocupado: true,
+                    pagado: true,
+                    nombre: estado.nombre || ""
+                }
+            );
+
+            cerrarModal();
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+            alert(
+                "No se pudo marcar como pagado."
+            );
+
+        }
+
+    }
+);
+
+
+/* ============================================ */
+/* PAGADO -> OCUPADO */
+/* ============================================ */
+
+volverOcupado.addEventListener(
+    "click",
+    async function () {
+
+        const estado =
+            datosActuales[numeroSeleccionado] || {};
+
+
+        try {
+
+            await set(
+                ref(
+                    database,
+                    `numeros/${numeroSeleccionado}`
+                ),
+                {
+                    ocupado: true,
+                    pagado: false,
+                    nombre: estado.nombre || ""
+                }
+            );
+
+            cerrarModal();
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+            alert(
+                "No se pudo cambiar el estado."
+            );
+
+        }
+
+    }
+);
+
+
+/* ============================================ */
+/* DESOCUPAR */
+/* ============================================ */
+
+async function desocuparNumero() {
+
+    try {
+
+        await set(
+            ref(
+                database,
+                `numeros/${numeroSeleccionado}`
+            ),
+            {
+                ocupado: false,
+                pagado: false,
+                nombre: ""
+            }
+        );
+
+        cerrarModal();
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        alert(
+            "No se pudo desocupar."
+        );
+
+    }
+
+}
+
+
+desocuparOcupado.addEventListener(
+    "click",
+    desocuparNumero
+);
+
+
+desocuparPagado.addEventListener(
+    "click",
+    desocuparNumero
+);
+
+
+/* ============================================ */
+/* CANCELAR */
+/* ============================================ */
+
+cancelarDisponible.addEventListener(
+    "click",
+    cerrarModal
+);
+
+cancelarNombre.addEventListener(
+    "click",
+    cerrarModal
+);
+
+cancelarOcupado.addEventListener(
+    "click",
+    cerrarModal
+);
+
+cancelarPagado.addEventListener(
+    "click",
+    cerrarModal
+);
+
+
+/* ============================================ */
+/* ENTER NOMBRE */
 /* ============================================ */
 
 nombreCliente.addEventListener(
@@ -485,30 +638,6 @@ nombreCliente.addEventListener(
 
 
 /* ============================================ */
-/* CANCELAR */
-/* ============================================ */
-
-cancelarOperacion.addEventListener(
-    "click",
-    function () {
-
-        cerrarModal();
-
-    }
-);
-
-
-cancelarNombre.addEventListener(
-    "click",
-    function () {
-
-        cerrarModal();
-
-    }
-);
-
-
-/* ============================================ */
 /* CERRAR MODAL */
 /* ============================================ */
 
@@ -518,18 +647,13 @@ function cerrarModal() {
         "activo"
     );
 
+    ocultarPasos();
 
     numeroSeleccionado =
         null;
 
-
-    numeroEstaOcupado =
-        false;
-
-
     nombreCliente.value =
         "";
-
 
     errorNombre.textContent =
         "";
@@ -548,7 +672,6 @@ loginBtn.addEventListener(
         const correo =
             correoInput.value.trim();
 
-
         const password =
             passwordInput.value;
 
@@ -560,7 +683,6 @@ loginBtn.addEventListener(
 
             mensaje.textContent =
                 "Escribe tu correo y contraseña.";
-
 
             return;
 
@@ -579,7 +701,6 @@ loginBtn.addEventListener(
                 password
             );
 
-
             mensaje.textContent =
                 "";
 
@@ -588,7 +709,6 @@ loginBtn.addEventListener(
         catch (error) {
 
             console.error(error);
-
 
             mensaje.textContent =
                 "Correo o contraseña incorrectos.";
@@ -614,7 +734,7 @@ cerrarSesion.addEventListener(
 
 
 /* ============================================ */
-/* DETECTAR SESIÓN */
+/* ESTADO SESIÓN */
 /* ============================================ */
 
 onAuthStateChanged(
@@ -626,7 +746,6 @@ onAuthStateChanged(
             loginBox.style.display =
                 "none";
 
-
             panelAdmin.style.display =
                 "block";
 
@@ -636,7 +755,6 @@ onAuthStateChanged(
 
             loginBox.style.display =
                 "block";
-
 
             panelAdmin.style.display =
                 "none";
@@ -662,7 +780,7 @@ onValue(
     numerosRef,
     function (snapshot) {
 
-        const datos =
+        datosActuales =
             snapshot.val() || {};
 
 
@@ -676,10 +794,8 @@ onValue(
                     const numero =
                         boton.dataset.numero;
 
-
                     const estado =
-                        datos[numero];
-
+                        datosActuales[numero] || {};
 
                     const nombreDiv =
                         document.querySelector(
@@ -688,26 +804,39 @@ onValue(
 
 
                     boton.classList.remove(
-                        "ocupado"
+                        "ocupado",
+                        "pagado"
                     );
-
 
                     nombreDiv.textContent =
                         "";
 
 
                     if (
-                        estado &&
                         estado.ocupado === true
                     ) {
 
-                        boton.classList.add(
-                            "ocupado"
-                        );
-
-
                         nombreDiv.textContent =
                             estado.nombre || "";
+
+
+                        if (
+                            estado.pagado === true
+                        ) {
+
+                            boton.classList.add(
+                                "pagado"
+                            );
+
+                        }
+
+                        else {
+
+                            boton.classList.add(
+                                "ocupado"
+                            );
+
+                        }
 
                     }
 

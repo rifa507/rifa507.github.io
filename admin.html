@@ -38,6 +38,10 @@
             margin-bottom: 25px;
         }
 
+        button {
+            cursor: pointer;
+        }
+
         /* ===================================== */
         /* LOGIN */
         /* ===================================== */
@@ -67,10 +71,6 @@
             border: 1px solid #555;
 
             font-size: 15px;
-        }
-
-        button {
-            cursor: pointer;
         }
 
         #loginBtn {
@@ -151,6 +151,8 @@
 
             justify-content: center;
 
+            flex-wrap: wrap;
+
             gap: 25px;
         }
 
@@ -177,8 +179,12 @@
             background: rgb(190, 55, 255);
         }
 
+        .color.pagado {
+            background: rgb(32, 190, 95);
+        }
+
         /* ===================================== */
-        /* CUADRÍCULA DE NÚMEROS */
+        /* CUADRÍCULA */
         /* ===================================== */
 
         .numeros-admin {
@@ -237,6 +243,14 @@
             border-color: #d597ff;
         }
 
+        .numero-admin.pagado {
+            background: rgb(32, 190, 95);
+
+            color: white;
+
+            border-color: rgb(94, 230, 145);
+        }
+
         .numero-texto {
             font-size: 17px;
 
@@ -270,7 +284,7 @@
         }
 
         /* ===================================== */
-        /* VENTANA DE CONFIRMACIÓN */
+        /* MODAL */
         /* ===================================== */
 
         .modal-fondo {
@@ -302,7 +316,7 @@
         .modal {
             width: 100%;
 
-            max-width: 420px;
+            max-width: 430px;
 
             padding: 25px;
 
@@ -318,8 +332,6 @@
 
         .modal h2 {
             margin-top: 0;
-
-            color: white;
         }
 
         .modal p {
@@ -336,18 +348,24 @@
             font-weight: bold;
         }
 
+        .nombre-modal {
+            color: white;
+
+            font-weight: bold;
+        }
+
         .botones-modal {
             display: flex;
 
-            justify-content: center;
+            flex-direction: column;
 
-            gap: 12px;
+            gap: 10px;
 
             margin-top: 20px;
         }
 
         .botones-modal button {
-            min-width: 100px;
+            width: 100%;
 
             padding: 11px 18px;
 
@@ -366,6 +384,22 @@
             border: 1px solid #b93cff;
         }
 
+        .btn-pagado {
+            background: rgb(32, 190, 95);
+
+            color: white;
+
+            border: 1px solid rgb(32, 190, 95);
+        }
+
+        .btn-desocupar {
+            background: #c0392b;
+
+            color: white;
+
+            border: 1px solid #c0392b;
+        }
+
         .btn-cancelar {
             background: transparent;
 
@@ -378,7 +412,9 @@
         /* PEDIR NOMBRE */
         /* ===================================== */
 
-        #pasoNombre {
+        #pasoNombre,
+        #pasoOcupado,
+        #pasoPagado {
             display: none;
         }
 
@@ -464,7 +500,7 @@
     </div>
 
 
-    <!-- PANEL ADMINISTRADOR -->
+    <!-- PANEL ADMIN -->
 
     <div id="panelAdmin">
 
@@ -480,32 +516,28 @@
 
         </div>
 
-
         <p class="subtitulo">
-            Selecciona un número para ocuparlo o desocuparlo.
+            Selecciona un número para cambiar su estado.
         </p>
-
 
         <div class="leyenda">
 
             <div class="estado">
-
                 <span class="color disponible"></span>
-
                 Disponible
-
             </div>
 
             <div class="estado">
-
                 <span class="color ocupado"></span>
-
                 Ocupado
+            </div>
 
+            <div class="estado">
+                <span class="color pagado"></span>
+                Pagado
             </div>
 
         </div>
-
 
         <div
             class="numeros-admin"
@@ -525,30 +557,26 @@
         <div class="modal">
 
 
-            <!-- CONFIRMACIÓN -->
+            <!-- DISPONIBLE -->
 
-            <div id="pasoConfirmacion">
+            <div id="pasoDisponible">
 
-                <h2>
-                    Confirmar
-                </h2>
+                <h2>Confirmar</h2>
 
-                <p id="textoModal"></p>
-
+                <p id="textoDisponible"></p>
 
                 <div class="botones-modal">
 
                     <button
                         class="btn-si"
-                        id="confirmarSi"
+                        id="ocuparSi"
                     >
-                        Sí
+                        Sí, ocupar
                     </button>
-
 
                     <button
                         class="btn-cancelar"
-                        id="cancelarOperacion"
+                        id="cancelarDisponible"
                     >
                         Cancelar
                     </button>
@@ -566,7 +594,6 @@
                     Nombre de la persona
                 </h2>
 
-
                 <p>
                     ¿Quién ocupará el número
                     <span
@@ -575,7 +602,6 @@
                     ></span>?
                 </p>
 
-
                 <input
                     type="text"
                     id="nombreCliente"
@@ -583,9 +609,7 @@
                     maxlength="50"
                 >
 
-
                 <div id="errorNombre"></div>
-
 
                 <div class="botones-modal">
 
@@ -596,10 +620,81 @@
                         Guardar
                     </button>
 
-
                     <button
                         class="btn-cancelar"
                         id="cancelarNombre"
+                    >
+                        Cancelar
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- OCUPADO -->
+
+            <div id="pasoOcupado">
+
+                <h2>Número ocupado</h2>
+
+                <p id="textoOcupado"></p>
+
+                <div class="botones-modal">
+
+                    <button
+                        class="btn-pagado"
+                        id="marcarPagado"
+                    >
+                        Marcar PAGADO
+                    </button>
+
+                    <button
+                        class="btn-desocupar"
+                        id="desocuparOcupado"
+                    >
+                        DESOCUPAR
+                    </button>
+
+                    <button
+                        class="btn-cancelar"
+                        id="cancelarOcupado"
+                    >
+                        Cancelar
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- PAGADO -->
+
+            <div id="pasoPagado">
+
+                <h2>Número pagado</h2>
+
+                <p id="textoPagado"></p>
+
+                <div class="botones-modal">
+
+                    <button
+                        class="btn-si"
+                        id="volverOcupado"
+                    >
+                        Volver a OCUPADO
+                    </button>
+
+                    <button
+                        class="btn-desocupar"
+                        id="desocuparPagado"
+                    >
+                        DESOCUPAR
+                    </button>
+
+                    <button
+                        class="btn-cancelar"
+                        id="cancelarPagado"
                     >
                         Cancelar
                     </button>

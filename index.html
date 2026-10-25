@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Rifa Especial de Navidad - De Mí Pa’ Ti</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="pagina">
+
+        <div class="rifa-container">
+
+            <!-- IMAGEN ORIGINAL DE LA RIFA -->
+            <img
+                src="rifa.jpeg"
+                alt="Rifa Especial de Navidad - De Mí Pa’ Ti"
+                class="rifa-imagen"
+            >
+
+            <!-- CUADRÍCULA INVISIBLE ENCIMA DE LOS NÚMEROS -->
+            <div
+                class="numeros-grid"
+                id="numbersContainer">
+            </div>
+
+        </div>
+
+
+        <!-- LEYENDA -->
+        <div class="panel">
+
+            <div class="estado">
+                <span class="cuadro disponible"></span>
+                Disponible
+            </div>
+
+            <div class="estado">
+                <span class="cuadro ocupado"></span>
+                Ocupado
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- FIREBASE + SCRIPT DE LA RIFA -->
+    <script type="module" src="script.js"></script>
+
+</body>
+
+</html>

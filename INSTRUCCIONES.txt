@@ -1,0 +1,14 @@
+RIFA ESPECIAL DE NAVIDAD 2026 - DE MÍ PA’ TI
+
+1. Abre esta carpeta en Visual Studio Code.
+2. Abre index.html con Live Server para ver la rifa.
+3. Abre admin.html con Live Server para el panel.
+4. La imagen navideña se llama rifa.jpeg.
+5. Los números ocupados son ROJOS en la rifa pública. En admin: blanco=disponible, rojo=ocupado, verde=pagado.
+6. Firebase guarda esta nueva rifa en: rifas/navidad2026/numeros. No usa los números antiguos del nodo /numeros.
+7. ATENCIÓN: Las pruebas de ocupar/desocupar en Live Server SÍ modifican Firebase, en la nueva ruta. No pruebes con clientes reales hasta verificar el funcionamiento.
+8. No subas el respaldo rifa-cartera-respaldo.jpeg si no lo necesitas.
+9. Publica los archivos HTML, JS, CSS y rifa.jpeg en GitHub cuando esté todo listo.
+10. Si la rifa pública no recibe datos, revisa las reglas de Firebase para permitir lectura pública SOLO en rifas/navidad2026/numeros y escritura SOLO para tu usuario administrador autenticado.
+11. Seguridad: el código original permite acceso al panel a cualquier usuario autenticado; para un uso público real, restringe la escritura en reglas por tu UID de administrador.
+12. Si los colores se desplazan sobre la imagen, ajusta left/top/width/height de .numeros-grid en style.css.
